@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bebilonia: The Dragon's Keep</title>
+    <style>
+        body {
+  font-family: system-ui;
+  background: #f06d06;
+  color: white;
+  text-align: center;
+}
+
+/* 👇 add this below */
+@keyframes dragonIdle {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.enemy-sprite {
+  width: 120px;
+  height: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: block;
+  margin: 0 auto 6px;
+  
+  animation: 
+    dragonIdle 2s infinite ease-in-out,
+    dragonGlow 1.5s infinite ease-in-out;
+}
+/* ── ELDEN RING MESSAGE STYLING ── */
+.elden-message {
+  background: rgba(18, 18, 16, 0.95);
+  border: 1px solid var(--gold);
+  padding: 30px;
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  text-align: left;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 30px rgba(201, 168, 76, 0.05);
+}
+
+.message-header {
+  font-family: 'Cinzel', serif;
+  color: var(--gold);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.message-body p {
+  font-family: 'Crimson Text', serif;
+  font-size: 17px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  color: var(--text);
+}
+
+.gold-text {
+  color: var(--gold2) !important;
+  font-style: italic;
+  border-left: 2px solid var(--gold);
+  padding-left: 15px;
+}
+
+.sig {
+  font-family: 'Cinzel', serif;
+  color: var(--gold);
+  margin-top: 25px !important;
+  font-weight: bold;
+}
+
+.message-footer {
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  letter-spacing: 2px;
+}
+@media (max-width: 480px) {
+  .party-row { gap: .5rem; }
+  .party-card { padding: .5rem .4rem; max-width: none; }
+  
+  /* Adjusted for mobile so they don't overlap */
+  .party-sprite-img { 
+    width: 70px; 
+    height: 70px; 
+  }
+  
+  .party-name { font-size: 10px; }
+  .party-class { font-size: 9px; }
+}
+    </style>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Bebilonia: The Dragon's Keep</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --bg:       #0d0b0e;
+  --bg2:      #161218;
+  --bg3:      #1e1820;
+  --border:   #3a2e2a;
+  --gold:     #c9a84c;
+  --gold2:    #e8c96a;
+  --red:      #c0392b;
+  --red2:     #e74c3c;
+  --blue:     #4a90c0;
+  --blue2:    #6ab4e8;
+  --green:    #4a8c5c;
+  --green2:   #6ab87a;
+  --purple:   #9b59b6;
+  --purple2:  #c39bd3;
+  --orange:   #e67e22;
+  --orange2:  #f39c12;
+  --text:     #e8dcc8;
+  --text2:    #a09070;
+  --text3:    #6a5840;
+}
+
+body {
+  font-family: 'Crimson Text', serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 4rem;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, #2a1a0a22 0%, transparent 60%),
+    repeating-linear-gradient(0deg, transparent, transparent 80px, #ffffff03 80px, #ffffff03 81px),
+    repeating-linear-gradient(90deg, transparent, transparent 80px, #ffffff03 80px, #ffffff03 81px);
+}
+
+/* ── TITLE SCREEN ── */
+#titleScreen {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 100vh; width: 100%; text-align: center; padding: 2rem;
+  animation: fadeIn .8s ease;
+}
+.title-ornament { color: var(--gold); font-size: 20px; letter-spacing: 12px; margin-bottom: 1rem; opacity: .7; }
+h1.game-title {
+  font-family: 'Cinzel', serif; font-size: clamp(28px, 7vw, 52px);
+  font-weight: 700; color: var(--gold2);
+  text-shadow: 0 0 40px #c9a84c55, 0 2px 0 #0d0b0e;
+  line-height: 1.15; margin-bottom: .5rem; letter-spacing: .04em;
+}
+.title-sub {
+  font-family: 'Cinzel', serif; font-size: clamp(12px, 2.5vw, 16px);
+  color: var(--text2); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 2.5rem;
+}
+.title-lore {
+  font-style: italic; color: var(--text2); font-size: clamp(13px, 2vw, 15px);
+  max-width: 420px; line-height: 1.8; margin-bottom: 3rem; border-left: 2px solid var(--border);
+  padding-left: 1rem; text-align: left;
+}
+.start-btn {
+  font-family: 'Cinzel', serif; font-size: 16px; letter-spacing: .15em;
+  color: var(--bg); background: var(--gold);
+  border: none; padding: 14px 48px; cursor: pointer;
+  clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  transition: background .2s, transform .12s;
+  text-transform: uppercase;
+}
+.start-btn:hover { background: var(--gold2); transform: scale(1.04); }
+.start-btn:active { transform: scale(.97); }
+
+/* ── GAME SCREEN ── */
+#gameScreen {
+  display: none; flex-direction: column; align-items: center;
+  width: 100%; max-width: 720px; padding: 1.5rem 1rem;
+  animation: fadeIn .6s ease;
+}
+
+.chapter-title {
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .25em;
+  color: var(--text3); text-transform: uppercase; margin-bottom: 1.5rem; text-align: center;
+}
+
+/* ── BATTLE STAGE - NEW LAYOUT ── */
+.stage {
+  width: 100%; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 1.25rem 1.25rem 1rem;
+  position: relative; overflow: hidden; margin-bottom: 1.25rem;
+}
+.stage::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 20%, #c9a84c08 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* DRAGON ON TOP */
+.dragon-row {
+  display: flex; justify-content: center; margin-bottom: 1.25rem;
+}
+.enemy-card { text-align: center; position: relative; width: 100%; }
+.enemy-sprite {
+  font-size: clamp(56px, 12vw, 80px); line-height: 1;
+  display: block; margin: 0 auto 6px;
+  filter: drop-shadow(0 0 20px #c0392b66);
+  transition: transform .15s;
+}
+.enemy-sprite.hit { animation: enemyHit .45s ease; }
+.enemy-name {
+  font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold);
+  letter-spacing: .1em; margin-bottom: 4px;
+}
+.enemy-tagline { font-size: 11px; color: var(--text3); font-style: italic; margin-bottom: 8px; }
+
+/* HP bars */
+.hp-bar-wrap { margin-bottom: 4px; }
+.hp-label {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--text2); margin-bottom: 3px; letter-spacing: .05em;
+}
+.hp-track {
+  height: 9px; background: #2a1e1e; border-radius: 2px; overflow: hidden;
+  border: 1px solid #3a2a2a; position: relative;
+}
+.hp-fill {
+  height: 100%; border-radius: 2px; transition: width .55s ease;
+  position: relative;
+}
+.hp-fill::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+  background-size: 200% 100%; animation: shimmer 2s infinite;
+}
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+.hp-fill.enemy  { background: linear-gradient(90deg, #6a1010, var(--red2)); }
+.hp-fill.clyde  { background: linear-gradient(90deg, #1a4a2a, var(--green2)); }
+.hp-fill.tank   { background: linear-gradient(90deg, #1a2a4a, var(--blue2)); }
+
+/* Status icons on HP bar */
+.status-icons { display: flex; gap: 4px; margin-top: 3px; min-height: 16px; flex-wrap: wrap; }
+.status-icon {
+  font-size: 10px; padding: 1px 5px; border-radius: 2px; letter-spacing: .05em;
+  animation: fadeIn .3s ease;
+}
+.status-burn   { background: #3a1010; color: #ff7744; border: 1px solid #6a2010; }
+.status-stun   { background: #1a1a3a; color: #aaaaff; border: 1px solid #2a2a6a; }
+.status-shield { background: #1a2a1a; color: #44ff88; border: 1px solid #2a5a2a; }
+.status-weak   { background: #2a2a10; color: #ffcc44; border: 1px solid #5a5a10; }
+
+/* PARTY on BOTTOM - side by side */
+.party-row {
+  display: flex; gap: .75rem; justify-content: center;
+}
+.party-card {
+  flex: 1; max-width: 210px; background: var(--bg3);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: .7rem; text-align: center; position: relative;
+  transition: border-color .2s, box-shadow .2s;
+}
+.party-card.active-turn { border-color: var(--gold); box-shadow: 0 0 14px #c9a84c33; }
+.party-card.dead { opacity: .4; filter: grayscale(1); }
+.party-sprite-img {
+  width: 54px; height: 54px; object-fit: contain;
+  image-rendering: pixelated; display: block; margin: 0 auto 5px;
+  transition: transform .15s;
+}
+.party-sprite-img.attacking { animation: attackAnim .5s ease; }
+.party-name { font-family: 'Cinzel', serif; font-size: 12px; color: var(--gold); letter-spacing: .08em; }
+.party-class { font-size: 10px; color: var(--text3); margin-bottom: 5px; line-height: 1.3; }
+
+.status-tag {
+  display: inline-block; font-size: 10px; letter-spacing: .06em;
+  padding: 2px 7px; border-radius: 2px; margin-top: 3px;
+  text-transform: uppercase;
+}
+.status-alive { background: #1a3a2a; color: var(--green2); border: 1px solid #2a5a3a; }
+.status-dead  { background: #2a1010; color: var(--red2);   border: 1px solid #4a1a1a; }
+
+/* ── ATTACK EFFECT OVERLAY ── */
+#effectOverlay {
+  position: fixed; inset: 0; pointer-events: none; z-index: 999;
+  display: flex; align-items: center; justify-content: center;
+}
+.effect-flash {
+  font-size: 60px; animation: effectPop .5s ease forwards;
+  text-shadow: 0 0 30px currentColor;
+}
+@keyframes effectPop {
+  0%   { transform: scale(0.3) translateY(20px); opacity: 0; }
+  40%  { transform: scale(1.3); opacity: 1; }
+  70%  { transform: scale(0.95); opacity: .9; }
+  100% { transform: scale(1.1) translateY(-20px); opacity: 0; }
+}
+
+/* DAMAGE NUMBER FLOAT */
+.dmg-float {
+  position: absolute; font-family: 'Cinzel', serif; font-weight: 700;
+  pointer-events: none; z-index: 1000; animation: floatUp .8s ease forwards;
+}
+@keyframes floatUp {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-50px) scale(1.4); }
+}
+
+/* ── MESSAGE LOG ── */
+.log-box {
+  width: 100%; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 1rem 1.25rem; min-height: 75px;
+  margin-bottom: 1.25rem; position: relative;
+}
+.log-box::before {
+  content: 'BATTLE LOG';
+  position: absolute; top: -9px; left: 16px;
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .2em;
+  color: var(--text3); background: var(--bg2); padding: 0 6px;
+}
+.log-line {
+  font-size: 14px; line-height: 1.7; color: var(--text);
+  animation: fadeIn .3s ease;
+}
+.log-line.dmg-player { color: var(--red2); }
+.log-line.dmg-enemy  { color: var(--green2); }
+.log-line.special    { color: var(--gold2); font-style: italic; }
+.log-line.system     { color: var(--text2); font-size: 12px; }
+.log-line.status-log { color: var(--purple2); font-style: italic; }
+
+/* ── ACTION PANEL ── */
+.action-panel {
+  width: 100%; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 1rem 1.25rem; margin-bottom: 1rem;
+  position: relative;
+}
+.action-panel::before {
+  content: 'ACTIONS';
+  position: absolute; top: -9px; left: 16px;
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .2em;
+  color: var(--text3); background: var(--bg2); padding: 0 6px;
+}
+.turn-indicator {
+  font-family: 'Cinzel', serif; font-size: 11px; color: var(--gold);
+  letter-spacing: .12em; margin-bottom: .75rem; text-align: center;
+}
+.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.action-btn {
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .04em;
+  color: var(--text); background: var(--bg3);
+  border: 1px solid var(--border); padding: 9px 8px;
+  cursor: pointer; transition: all .15s; border-radius: 3px;
+  text-align: left; line-height: 1.3;
+}
+.action-btn:hover:not(:disabled) {
+  border-color: var(--gold); color: var(--gold2); background: #1e1810;
+}
+.action-btn:active:not(:disabled) { transform: scale(.97); }
+.action-btn:disabled { opacity: .35; cursor: not-allowed; }
+.action-btn .btn-name { display: block; font-weight: 600; font-size: 12px; }
+.action-btn .btn-fp   { display: block; font-size: 9px; color: var(--blue2); margin-top: 2px; }
+.action-btn .btn-desc { display: block; font-size: 9px; color: var(--text3); margin-top: 1px; font-family: 'Crimson Text', serif; font-style: italic; letter-spacing: 0; }
+
+/* ── WIN / LOSE SCREENS ── */
+#winScreen {
+  display: none; flex-direction: column; align-items: center;
+  width: 100%; max-width: 520px; padding: 3rem 1.5rem;
+  text-align: center; animation: fadeIn .8s ease;
+}
+.win-ornament { font-size: 48px; margin-bottom: 1rem; animation: float 3s ease-in-out infinite; }
+.win-title {
+  font-family: 'Cinzel', serif; font-size: clamp(22px, 5vw, 32px);
+  color: var(--gold2); margin-bottom: .5rem; text-shadow: 0 0 30px #c9a84c66;
+}
+.win-sub { font-family: 'Cinzel', serif; font-size: 12px; color: var(--text2); letter-spacing: .2em; margin-bottom: 2rem; }
+.win-message {
+  font-style: italic; font-size: clamp(15px, 2.5vw, 18px);
+  color: var(--text); line-height: 1.9; max-width: 400px;
+  border: 1px solid var(--border); padding: 1.5rem 2rem;
+  border-radius: 4px; background: var(--bg2); margin-bottom: 2rem;
+  position: relative;
+}
+.win-message::before, .win-message::after {
+  content: '✦'; font-style: normal; color: var(--gold); font-size: 12px;
+  position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  background: var(--bg2); padding: 0 8px;
+}
+.win-message::after { top: auto; bottom: -8px; }
+.win-photo-wrap {
+  width: 100%; max-width: 320px; margin-bottom: 1.75rem;
+  border: 2px solid var(--gold); border-radius: 6px; overflow: hidden;
+  box-shadow: 0 0 30px #c9a84c33;
+}
+.win-photo { width: 100%; display: block; object-fit: cover; animation: fadeIn .8s ease .3s both; }
+.replay-btn {
+  font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: .12em;
+  color: var(--text2); background: transparent;
+  border: 1px solid var(--border); padding: 10px 32px;
+  cursor: pointer; transition: all .2s; border-radius: 3px; text-transform: uppercase;
+}
+.replay-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+#loseScreen {
+  display: none; flex-direction: column; align-items: center;
+  width: 100%; max-width: 520px; padding: 3rem 1.5rem;
+  text-align: center; animation: fadeIn .8s ease;
+}
+.lose-title {
+  font-family: 'Cinzel', serif; font-size: clamp(24px, 6vw, 40px);
+  color: var(--red2); margin-bottom: .5rem; text-shadow: 0 0 30px #e74c3c44;
+}
+.lose-sub { font-family: 'Cinzel', serif; font-size: 12px; color: var(--text2); letter-spacing: .2em; margin-bottom: 2rem; }
+.lose-msg { font-style: italic; color: var(--text2); font-size: 15px; line-height: 1.8; margin-bottom: 2rem; }
+
+/* ── MOBILE ── */
+@media (max-width: 480px) {
+  .party-row { gap: .5rem; }
+  .party-card { padding: .5rem .4rem; max-width: none; }
+  .party-sprite-img { width: 44px; height: 44px; }
+  .party-name { font-size: 10px; }
+  .party-class { font-size: 9px; }
+  .action-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .action-btn { padding: 8px 6px; font-size: 10px; }
+  .action-btn .btn-name { font-size: 11px; }
+  .enemy-sprite { font-size: 52px; }
+  .stage { padding: 1rem .75rem .75rem; }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+@keyframes float  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes enemyHit {
+  0%{transform:translateX(0) scale(1)}
+  20%{transform:translateX(-10px) scale(.93) rotate(-2deg)}
+  50%{transform:translateX(8px) scale(1.04) rotate(1deg)}
+  75%{transform:translateX(-5px)}
+  100%{transform:translateX(0) scale(1)}
+}
+@keyframes attackAnim {
+  0%{transform:translateY(0) scale(1)}
+  35%{transform:translateY(-16px) scale(1.15)}
+  65%{transform:translateY(5px) scale(.95)}
+  100%{transform:translateY(0) scale(1)}
+}
+@keyframes screenShake {
+  0%,100%{transform:translateX(0)}
+  15%{transform:translateX(-8px) rotate(-.5deg)}
+  30%{transform:translateX(7px) rotate(.3deg)}
+  45%{transform:translateX(-5px)}
+  60%{transform:translateX(4px)}
+  75%{transform:translateX(-3px)}
+}
+@keyframes burnPulse {
+  0%,100%{box-shadow:0 0 0 0 transparent}
+  50%{box-shadow:0 0 16px 4px #ff440055}
+}
+@keyframes stunFlash {
+  0%,100%{opacity:1}
+  50%{opacity:.5;filter:hue-rotate(240deg)}
+}
+</style>
+</head>
+  <audio id="bgMusic" loop src="https://www.dropbox.com/scl/fi/nggj1xkwpze5lbbonofh5/RPG-Music.mp3?rlkey=5uvg98y35epowmjnspmkw1vcy&st=5795nic7&raw=1"></audio>
+<body>
+<canvas id="emberCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
+<div id="effectOverlay"></div>
+
+<div style="position:relative;z-index:1;width:100%;display:flex;flex-direction:column;align-items:center;">
+
+<!-- ══════════════ TITLE SCREEN ══════════════ -->
+<div id="titleScreen">
+  <div class="title-ornament">⚔ ✦ ⚔</div>
+  <h1 class="game-title">Bebilonia:<br>The Dragon's Keep</h1>
+  <p class="title-sub">Are you ready to take on this quest?</p>
+  <p class="title-lore">
+    In the cursed reaches beyond the Fog Wall...
+  </p>
+  
+  <!-- Your main start button -->
+  <button class="start-btn" onclick="startGame()">Begin Journey</button>
+  
+  <br> <!-- Adds a little space -->
+
+  <!-- PASTE THE TOGGLE BUTTON HERE -->
+  <button id="musicToggle" onclick="toggleMusic()" style="background:none; border:1px solid var(--border); color:var(--text3); font-family:'Cinzel'; cursor:pointer; padding:5px 10px; margin-top:10px; font-size:10px; position: relative; z-index: 10;">
+    🔈 MUSIC: OFF
+  </button>
+</div>
+
+<!-- ══════════════ GAME SCREEN ══════════════ -->
+<div id="gameScreen">
+  <p class="chapter-title">⚔ &nbsp; Chapter I — The Dragon's Keep &nbsp; ⚔</p>
+
+  <div class="stage" id="mainStage">
+
+    <!-- DRAGON ON TOP -->
+    <div class="dragon-row">
+      <div class="enemy-card">
+        <div class="hp-bar-wrap" style="max-width:320px;margin:0 auto 10px">
+          <div class="hp-label">
+            <span id="enemyName">Ignareth the Ashen</span>
+            <span id="enemyHpText">500 / 500</span>
+          </div>
+          <div class="hp-track"><div class="hp-fill enemy" id="enemyHpBar" style="width:100%"></div></div>
+          <div class="status-icons" id="enemyStatusIcons"></div>
+        </div>
+        <img 
+  id="enemySprite" 
+  src="https://i.imgur.com/wS39dZb.png"
+  class="enemy-sprite"
+  alt="Enemy Dragon"
+/>
+        <p class="enemy-name">IGNARETH THE ASHEN</p>
+        <p class="enemy-tagline">"Ancient Flame of the Ruined Keep"</p>
+      </div>
+    </div>
+
+ <!-- ══════════════ PARTY CARDS ══════════════ -->
+<div class="party-row">
+
+  <!-- CLYDE CARD -->
+  <div class="party-card" id="clydeCard" style="min-width: 150px;">
+    <img id="clydeSprite" src="https://i.imgur.com/RC8GUFo.png"
+      class="party-sprite-img" alt="Clyde" 
+      style="width: 110px; height: 110px; margin-bottom: 10px;"/> <!-- BIGGER SIZE HERE -->
+    
+    <p class="party-name">CLYDE</p>
+    <p class="party-class">The Undying Tarnished</p>
+    <div class="hp-bar-wrap">
+      <div class="hp-label"><span>HP</span><span id="clydeHpText">200 / 200</span></div>
+      <div class="hp-track"><div class="hp-fill clyde" id="clydeHpBar" style="width:100%"></div></div>
+    </div>
+    <div class="status-icons" id="clydeStatusIcons"></div>
+    <span class="status-tag status-alive" id="clydeStatus">Alive</span>
+  </div>
+
+  <!-- TANK CARD -->
+  <div class="party-card" id="tankCard" style="min-width: 150px;">
+    <img id="tankSprite" src="https://imgur.com/hfbKVtq.png"
+      class="party-sprite-img" alt="Tank" 
+      style="width: 110px; height: 110px; margin-bottom: 10px;"/> <!-- BIGGER SIZE HERE -->
+    
+    <p class="party-name">TANK</p>
+    <p class="party-class">Tankus Maximus, Lord of the Kitchen Basket</p>
+    <div class="hp-bar-wrap">
+      <div class="hp-label"><span>HP</span><span id="tankHpText">150 / 150</span></div>
+      <div class="hp-track"><div class="hp-fill tank" id="tankHpBar" style="width:100%"></div></div>
+    </div>
+    <div class="status-icons" id="tankStatusIcons"></div>
+    <span class="status-tag status-alive" id="tankStatus">Alive</span>
+  </div>
+
+</div>
+  </div>
+
+  <!-- LOG -->
+  <div class="log-box">
+    <div id="logLines"><p class="log-line system">The great dragon stirs... prepare for battle.</p></div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="action-panel">
+    <p class="turn-indicator" id="turnIndicator">— CLYDE'S TURN —</p>
+    <div class="action-grid" id="actionGrid"></div>
+  </div>
+</div>
+
+<!-- ══════════════ WIN SCREEN ══════════════ -->
+<div id="winScreen">
+  <div class="win-ornament">🏆</div>
+  <h2 class="win-title">Victory</h2>
+  <p class="win-sub">The Dragon Has Fallen</p>
+  
+  <div class="win-photo-wrap" id="winPhotoWrap">
+    <img src="your-photo.jpg" class="win-photo" alt="A photo for Clyde"
+         onerror="this.parentElement.style.display='none'"/>
+  </div>
+
+  <!-- YOUR UPDATED ADVENTURER MESSAGE -->
+  <div class="elden-message">
+    <div class="message-header">🗡️ To My Dearest Companion</div>
+    <div class="message-body">
+      <p>Dear Bebi,</p>
+      <p>Happy thirty-one moons of travel, my love! It has ever been a grace to share these adventures with you; even when our "questing" is merely the hustle of staying in bed, or feasting while watching together.</p>
+      <p>I am deeply thankful for the light you provide, even on days when we feel worn out. I look upon the milestones you have conquered with great pride; know that I shall be cheering for your triumphs from the sidelines, always.</p>
+      <p>I have crafted this "game" to remind you that you are my <strong>strongest warrior</strong>, and I desire nothing more than to seek further adventures by your side. I may not be the greatest "Player 2" to roam these lands, but I vow to do my very best to fight along your side.</p>
+      <p class="gold-text">You are my favorite adventure. No matter the dungeon we stumble into, it is you and me in the party against all odds.</p>
+      <p>I hope you find joy in this.</p>
+      <p class="sig">Love, Elena</p>
+    </div>
+    <div class="message-footer">[ I LOVE YOU SO MUCH! ]</div>
+  </div>
+
+  <button class="replay-btn" onclick="resetGame()">⟳ &nbsp; Rise Again</button>
+</div>
+
+<!-- ══════════════ LOSE SCREEN ══════════════ -->
+<div id="loseScreen">
+  <p style="font-size:48px;margin-bottom:1rem">💀</p>
+  <h2 class="lose-title">You Died</h2>
+  <p class="lose-sub">Slain by Ignareth the Ashen</p>
+  <p class="lose-msg">Even the greatest Tarnished must rise again...</p>
+  <button class="replay-btn" onclick="resetGame()">⟳ &nbsp; Rise Again</button>
+</div>
+
+<!-- ══════════════ SCRIPTS ══════════════ -->
+<script>
+// ══════════════ WEB AUDIO ══════════════
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+function getAudio() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+  return audioCtx;
+}
+function beep(freq, type, duration, gain=0.18, delay=0) {
+  try {
+    const ctx = getAudio();
+    const t = ctx.currentTime + delay;
+    const osc = ctx.createOscillator();
+    const vol = ctx.createGain();
+    osc.connect(vol); vol.connect(ctx.destination);
+    osc.type = type; osc.frequency.setValueAtTime(freq, t);
+    vol.gain.setValueAtTime(0, t);
+    vol.gain.linearRampToValueAtTime(gain, t + 0.01);
+    vol.gain.exponentialRampToValueAtTime(0.001, t + duration);
+    osc.start(t); osc.stop(t + duration);
+  } catch(e) {}
+}
+
+const SFX = {
+  attack()  { beep(220,'sawtooth',.12,.2); beep(180,'sawtooth',.1,.15,.05); },
+  heavy()   { beep(120,'sawtooth',.18,.25); beep(90,'square',.15,.2,.06); beep(60,'square',.3,.12,.1); },
+  heal()    { [0,.07,.14,.21].forEach((d,i)=>beep(440+i*110,'sine',.25,.12,d)); },
+  buff()    { [0,.08,.16].forEach((d,i)=>beep(350+i*80,'triangle',.3,.14,d)); },
+  hit()     { beep(150,'square',.08,.3); beep(100,'sawtooth',.12,.2,.04); },
+  dragonRoar() { [0,.05,.1,.15,.2].forEach((d,i)=>beep(80-i*10,'sawtooth',.4,.22,d)); },
+  stun()    { beep(600,'sine',.05,.2); beep(300,'sine',.08,.15,.05); beep(150,'sine',.15,.1,.1); },
+  burn()    { [0,.04,.08,.12].forEach((d,i)=>beep(800+i*200,'sawtooth',.04,.1,d)); },
+  victory() { const notes=[523,659,784,1047]; notes.forEach((n,i)=>beep(n,'sine',.4,.15,i*.15)); },
+  defeat()  { beep(220,'sawtooth',.5,.2); beep(180,'sawtooth',.6,.2,.2); beep(100,'sawtooth',.8,.25,.5); },
+};
+
+// ══════════════ GAME DATA ══════════════
+const ENEMY = {
+  name: "Ignareth the Ashen",
+  maxHp: 500, hp: 500,
+  attacks: [
+    { name:"Dragonfire Breath", dmg:[28,38], msg:"Ignareth unleashes a torrent of ancient flame!", type:"dmg-player", effect:"🔥", sfx:"dragonRoar", status:{target:"all",type:"burn",dur:2} },
+    { name:"Tail Sweep",        dmg:[18,26], msg:"The great tail crashes across the battlefield!", type:"dmg-player", effect:"💥", sfx:"dragonRoar" },
+    { name:"Ashen Roar",        dmg:[12,20], msg:"A deafening roar shakes the keep!", type:"dmg-player", effect:"🌊", sfx:"dragonRoar", status:{target:"all",type:"stun",dur:1} },
+    { name:"Claw Swipe",        dmg:[22,32], msg:"Iron claws tear through the air!", type:"dmg-player", effect:"⚡", sfx:"hit" },
+    { name:"Wing Buffet",       dmg:[15,22], msg:"Massive wings send both heroes flying!", type:"dmg-player", effect:"🌪️", sfx:"hit" },
+    { name:"Ember Curse",       dmg:[20,30], msg:"Cursed embers cling to the party!", type:"dmg-player", effect:"🔥", sfx:"burn", status:{target:"all",type:"burn",dur:3} },
+  ]
+};
+
+const CLYDE_MOVES = [
+  { name:"Greatsword Slam",  fp:"",      dmg:[35,50], type:"attack", desc:"A mighty overhead blow", effect:"⚔️",  sfx:"heavy" },
+  { name:"Golden Vow",       fp:"Buff",  dmg:[0,0],   type:"buff",   desc:"Raises morale — Tank heals 30 HP", effect:"✨", sfx:"buff" },
+  { name:"Elena's Kiss",     fp:"Heal",  dmg:[0,0],   type:"heal",   desc:"Restores 50 HP and makes you happy.", effect:"💚",   sfx:"heal" },
+  { name:"Fetid Fog Wall",   fp:"Skill", dmg:[55,75], type:"attack", desc:"A noxious shroud of fart — stuns the dragon", effect:"☠️", sfx:"heavy", status:{target:"enemy",type:"weak",dur:2} },
+];
+
+const TANK_MOVES = [
+  { name:"Pounce Strike",        fp:"",       dmg:[25,40], type:"attack", desc:"A fearless leap at the dragon", effect:"🐾",   sfx:"attack" },
+  { name:"Furious Hiss",         fp:"Debuff", dmg:[10,18], type:"attack", desc:"Stuns the enemy briefly", effect:"😾",         sfx:"stun",   status:{target:"enemy",type:"stun",dur:1} },
+  { name:"Kitchen Basket Spin",  fp:"Skill",  dmg:[40,60], type:"attack", desc:"Legendary technique of the Basket Lords", effect:"🧺", sfx:"heavy" },
+  { name:"Eat Lizard",           fp:"Heal",   dmg:[0,0],   type:"heal",   desc:"Restores 40 HP. Bad Kitty.", effect:"🦎", sfx:"heal" },
+];
+
+// ══════════════ STATE ══════════════
+let state = {};
+
+function initState() {
+  state = {
+    enemyHp: ENEMY.maxHp, enemyStatus: [],
+    clydeHp: 200, clydeMaxHp: 200, clydeAlive: true, clydeStatus: [],
+    tankHp: 150,  tankMaxHp: 150,  tankAlive: true,  tankStatus: [],
+    turn: 'clyde',
+    busy: false,
+  };
+}
+
+// ══════════════ STATUS EFFECTS ══════════════
+const STATUS_META = {
+  burn:   { label:'🔥 Burn',    cls:'status-burn',   dmgPerTurn: () => rand(8,14) },
+  stun:   { label:'⚡ Stun',    cls:'status-stun',   skipTurn: true },
+  shield: { label:'🛡 Shield',  cls:'status-shield', reduceDmg: 0.4 },
+  weak:   { label:'💫 Weak',    cls:'status-weak',   dmgMult: 0.7 },
+};
+
+function addStatus(who, type, dur) {
+  const arr = state[who+'Status'];
+  const existing = arr.find(s => s.type === type);
+  if (existing) { existing.dur = Math.max(existing.dur, dur); return; }
+  arr.push({ type, dur });
+}
+
+function tickStatuses(who) {
+  const arr = state[who+'Status'];
+  const msgs = [];
+  for (let i = arr.length-1; i >= 0; i--) {
+    const s = arr[i];
+    const meta = STATUS_META[s.type];
+    if (meta.dmgPerTurn) {
+      const dmg = meta.dmgPerTurn();
+      if (who === 'enemy') { state.enemyHp -= dmg; msgs.push(`🔥 Ignareth burns for <strong>${dmg}</strong> damage!`); }
+      else if (who === 'clyde') { state.clydeHp -= dmg; msgs.push(`🔥 Clyde burns for <strong>${dmg}</strong> damage!`); }
+      else if (who === 'tank')  { state.tankHp  -= dmg; msgs.push(`🔥 Tank burns for <strong>${dmg}</strong> damage!`); }
+    }
+    s.dur--;
+    if (s.dur <= 0) arr.splice(i, 1);
+  }
+  return msgs;
+}
+
+function isStunned(who) { return state[who+'Status'].some(s => s.type === 'stun'); }
+
+function getDmgMult(who) {
+  const arr = state[who+'Status'];
+  let m = 1;
+  arr.forEach(s => { if (STATUS_META[s.type].dmgMult) m *= STATUS_META[s.type].dmgMult; });
+  return m;
+}
+
+// ══════════════ VISUAL EFFECTS ══════════════
+function showEffect(emoji) {
+  const ov = document.getElementById('effectOverlay');
+  ov.innerHTML = `<span class="effect-flash">${emoji}</span>`;
+  setTimeout(() => ov.innerHTML = '', 600);
+}
+
+function showDmgFloat(el, amount, color='#e74c3c') {
+  const rect = el.getBoundingClientRect();
+  const d = document.createElement('div');
+  d.className = 'dmg-float';
+  d.textContent = '-' + amount;
+  d.style.cssText = `left:${rect.left + rect.width/2 - 20}px;top:${rect.top}px;color:${color};font-size:${amount>40?22:16}px`;
+  document.body.appendChild(d);
+  setTimeout(() => d.remove(), 900);
+}
+
+function shakeScreen() {
+  const s = document.getElementById('mainStage');
+  s.style.animation = 'screenShake .5s ease';
+  setTimeout(() => s.style.animation = '', 500);
+}
+
+// ══════════════ CORE ══════════════
+function startGame() {
+  initState();
+  ['titleScreen','winScreen','loseScreen'].forEach(id => document.getElementById(id).style.display='none');
+  document.getElementById('gameScreen').style.display = 'flex';
+  renderAll();
+}
+function resetGame() {
+  ['winScreen','loseScreen'].forEach(id => document.getElementById(id).style.display='none');
+  startGame();
+}
+
+// ══════════════ RENDER ══════════════
+function renderAll() { renderHp(); renderActions(); renderTurnIndicator(); }
+
+function renderStatusIcons(who) {
+  const el = document.getElementById(who+'StatusIcons');
+  if (!el) return;
+  el.innerHTML = state[who+'Status'].map(s => {
+    const m = STATUS_META[s.type];
+    return `<span class="status-icon ${m.cls}">${m.label} (${s.dur})</span>`;
+  }).join('');
+}
+
+function renderHp() {
+  const ep = Math.max(0, state.enemyHp / ENEMY.maxHp * 100);
+  document.getElementById('enemyHpBar').style.width  = ep + '%';
+  document.getElementById('enemyHpText').textContent = Math.max(0, state.enemyHp) + ' / ' + ENEMY.maxHp;
+  renderStatusIcons('enemy');
+
+  const cp = Math.max(0, state.clydeHp / state.clydeMaxHp * 100);
+  document.getElementById('clydeHpBar').style.width  = cp + '%';
+  document.getElementById('clydeHpText').textContent = Math.max(0, state.clydeHp) + ' / ' + state.clydeMaxHp;
+  document.getElementById('clydeStatus').textContent = state.clydeAlive ? 'Alive' : 'Fallen';
+  document.getElementById('clydeStatus').className   = 'status-tag ' + (state.clydeAlive ? 'status-alive' : 'status-dead');
+  document.getElementById('clydeCard').className     = 'party-card' + (state.turn==='clyde'?' active-turn':'') + (!state.clydeAlive?' dead':'');
+  renderStatusIcons('clyde');
+
+  const tp = Math.max(0, state.tankHp / state.tankMaxHp * 100);
+  document.getElementById('tankHpBar').style.width  = tp + '%';
+  document.getElementById('tankHpText').textContent = Math.max(0, state.tankHp) + ' / ' + state.tankMaxHp;
+  document.getElementById('tankStatus').textContent = state.tankAlive ? 'Alive' : 'Fallen';
+  document.getElementById('tankStatus').className   = 'status-tag ' + (state.tankAlive ? 'status-alive' : 'status-dead');
+  document.getElementById('tankCard').className     = 'party-card' + (state.turn==='tank'?' active-turn':'') + (!state.tankAlive?' dead':'');
+  renderStatusIcons('tank');
+}
+
+function renderTurnIndicator() {
+  const labels = { clyde:"— CLYDE'S TURN —", tank:"— TANK'S TURN —", enemy:"— ENEMY TURN —" };
+  document.getElementById('turnIndicator').textContent = labels[state.turn] || '';
+}
+
+function renderActions() {
+  const grid = document.getElementById('actionGrid');
+  grid.innerHTML = '';
+  if (state.busy || state.turn === 'enemy') {
+    grid.innerHTML = '<p style="font-size:13px;color:var(--text3);font-style:italic;grid-column:1/-1;text-align:center;padding:.5rem 0">Awaiting...</p>';
+    return;
+  }
+  const moves = state.turn === 'clyde' ? CLYDE_MOVES : TANK_MOVES;
+  const stunned = isStunned(state.turn);
+  moves.forEach(m => {
+    const btn = document.createElement('button');
+    btn.className = 'action-btn';
+    btn.disabled = stunned && m.type !== 'heal';
+    btn.innerHTML = `<span class="btn-name">${m.name}</span>${m.fp?`<span class="btn-fp">[${m.fp}]</span>`:''}<span class="btn-desc">${m.desc}</span>`;
+    btn.onclick = () => useMove(m);
+    grid.appendChild(btn);
+  });
+  if (stunned) {
+    const note = document.createElement('p');
+    note.style.cssText = 'font-size:11px;color:#aaaaff;font-style:italic;grid-column:1/-1;text-align:center;margin-top:4px';
+    note.textContent = '⚡ Stunned! Only healing moves available.';
+    grid.appendChild(note);
+  }
+}
+
+// ══════════════ BATTLE LOGIC ══════════════
+function rand(min, max) { return Math.floor(Math.random() * (max-min+1)) + min; }
+
+function addLog(text, cls='') {
+  document.getElementById('logLines').innerHTML = `<p class="log-line ${cls}">${text}</p>`;
+}
+
+function animSprite(id) {
+  const el = document.getElementById(id);
+  el.classList.remove('attacking'); void el.offsetWidth; el.classList.add('attacking');
+  setTimeout(() => el.classList.remove('attacking'), 500);
+}
+function animEnemyHit() {
+  const el = document.getElementById('enemySprite');
+  el.classList.remove('hit'); void el.offsetWidth; el.classList.add('hit');
+  setTimeout(() => el.classList.remove('hit'), 450);
+}
+
+function useMove(move) {
+  if (state.busy) return;
+  state.busy = true;
+  renderActions();
+
+  const actor = state.turn;
+  animSprite(actor + 'Sprite');
+  if (move.sfx && SFX[move.sfx]) SFX[move.sfx]();
+  if (move.effect) setTimeout(() => showEffect(move.effect), 180);
+
+  setTimeout(() => {
+    if (move.type === 'attack') {
+      const baseDmg = rand(move.dmg[0], move.dmg[1]);
+      const weakMult = getDmgMult('enemy');
+      const dmg = Math.round(baseDmg * weakMult);
+      state.enemyHp -= dmg;
+      animEnemyHit();
+      shakeScreen();
+      showDmgFloat(document.getElementById('enemySprite'), dmg, '#6ab87a');
+      addLog(`${actor==='clyde'?'Clyde':'Tank'} uses <strong>${move.name}</strong> — deals <strong>${dmg}</strong> damage!`, 'dmg-enemy');
+      if (move.status && move.status.target === 'enemy') {
+        addStatus('enemy', move.status.type, move.status.dur);
+        addLog(`The enemy is afflicted with ${STATUS_META[move.status.type].label}!`, 'status-log');
+        if (move.status.type === 'stun') SFX.stun();
+      }
+      if (state.enemyHp <= 0) { renderHp(); setTimeout(showWin, 700); return; }
+
+    } else if (move.type === 'heal') {
+      if (actor === 'clyde') {
+        state.clydeHp = Math.min(state.clydeMaxHp, state.clydeHp + 50);
+        addLog(`Clyde uses <strong>${move.name}</strong> — restores 50 HP!`, 'special');
+      } else {
+        state.tankHp = Math.min(state.tankMaxHp, state.tankHp + 40);
+        addLog(`Tank uses <strong>${move.name}</strong> — restores 40 HP through sheer cuteness!`, 'special');
+      }
+
+    } else if (move.type === 'buff') {
+      state.tankHp = Math.min(state.tankMaxHp, state.tankHp + 30);
+      addLog(`Clyde uses <strong>${move.name}</strong> — Tank recovers 30 HP!`, 'special');
+    }
+
+    renderHp();
+    advanceTurn();
+  }, 320);
+}
+
+function advanceTurn() {
+  if (state.turn === 'clyde') {
+    state.turn = state.tankAlive ? 'tank' : 'enemy';
+  } else if (state.turn === 'tank') {
+    state.turn = 'enemy';
+  } else {
+    state.turn = state.clydeAlive ? 'clyde' : (state.tankAlive ? 'tank' : 'enemy');
+  }
+  state.busy = false;
+  renderAll();
+  if (state.turn === 'enemy') setTimeout(enemyTurn, 900);
+}
+
+function enemyTurn() {
+  state.busy = true;
+  renderActions();
+
+  // Tick enemy status effects first
+  const statusMsgs = tickStatuses('enemy');
+  statusMsgs.forEach(m => addLog(m, 'status-log'));
+  if (statusMsgs.length) SFX.burn();
+
+  renderHp();
+  if (state.enemyHp <= 0) { setTimeout(showWin, 700); return; }
+
+  // Check stun
+  if (isStunned('enemy')) {
+    addLog(`⚡ Ignareth is stunned and loses its turn!`, 'status-log');
+    const stIdx = state.enemyStatus.findIndex(s=>s.type==='stun');
+    if(stIdx>=0) state.enemyStatus[stIdx].dur--;
+    if(state.enemyStatus[stIdx] && state.enemyStatus[stIdx].dur<=0) state.enemyStatus.splice(stIdx,1);
+    renderStatusIcons('enemy');
+    state.turn = state.clydeAlive ? 'clyde' : (state.tankAlive ? 'tank' : 'enemy');
+    state.busy = false;
+    renderAll();
+    return;
+  }
+
+  // Tick party status effects
+  ['clyde','tank'].forEach(who => {
+    if (!state[who+'Alive']) return;
+    const msgs = tickStatuses(who);
+    msgs.forEach(m => { addLog(m, 'status-log'); SFX.burn(); });
+    if (state[who+'Hp'] <= 0) {
+      state[who+'Hp'] = 0;
+      state[who+'Alive'] = false;
+    }
+  });
+  renderHp();
+  if (!state.clydeAlive && !state.tankAlive) { setTimeout(showLose, 700); return; }
+
+  const atk = ENEMY.attacks[rand(0, ENEMY.attacks.length-1)];
+  const baseDmg = rand(atk.dmg[0], atk.dmg[1]);
+
+  if (atk.sfx && SFX[atk.sfx]) SFX[atk.sfx]();
+  if (atk.effect) showEffect(atk.effect);
+  shakeScreen();
+
+  addLog(`Ignareth uses <strong>${atk.name}</strong>! ${atk.msg}`, 'dmg-player');
+
+  const alive = ['clyde','tank'].filter(w => state[w+'Alive']);
+
+  setTimeout(() => {
+    if (alive.length === 2) {
+      const cDmg = Math.floor(baseDmg * 0.55);
+      const tDmg = baseDmg - cDmg;
+      state.clydeHp -= cDmg; state.tankHp -= tDmg;
+      showDmgFloat(document.getElementById('clydeSprite'), cDmg);
+      showDmgFloat(document.getElementById('tankSprite'), tDmg);
+      addLog(`Clyde takes <strong>${cDmg}</strong> damage, Tank takes <strong>${tDmg}</strong> damage!`, 'dmg-player');
+    } else if (alive[0]==='clyde') {
+      state.clydeHp -= baseDmg;
+      showDmgFloat(document.getElementById('clydeSprite'), baseDmg);
+      addLog(`Clyde takes <strong>${baseDmg}</strong> damage!`, 'dmg-player');
+    } else {
+      state.tankHp -= baseDmg;
+      showDmgFloat(document.getElementById('tankSprite'), baseDmg);
+      addLog(`Tank takes <strong>${baseDmg}</strong> damage!`, 'dmg-player');
+    }
+
+    // Apply enemy's status effect to party
+    if (atk.status) {
+      alive.forEach(who => addStatus(who, atk.status.type, atk.status.dur));
+      addLog(`The party is afflicted with ${STATUS_META[atk.status.type].label}!`, 'status-log');
+      if (atk.status.type === 'stun') SFX.stun();
+      if (atk.status.type === 'burn') SFX.burn();
+    }
+
+    if (state.clydeHp <= 0) { state.clydeHp = 0; state.clydeAlive = false; }
+    if (state.tankHp  <= 0) { state.tankHp  = 0; state.tankAlive  = false; }
+
+    renderHp();
+    if (!state.clydeAlive && !state.tankAlive) { setTimeout(showLose, 700); return; }
+
+    state.turn = state.clydeAlive ? 'clyde' : 'tank';
+    state.busy = false;
+    renderAll();
+  }, 550);
+}
+
+function showWin()  {
+  SFX.victory();
+  document.getElementById('gameScreen').style.display = 'none';
+  document.getElementById('winScreen').style.display  = 'flex';
+}
+function showLose() {
+  SFX.defeat();
+  document.getElementById('gameScreen').style.display = 'none';
+  document.getElementById('loseScreen').style.display = 'flex';
+}
+</script>
+
+<!-- Ember particle canvas -->
+<script>
+const canvas = document.getElementById('emberCanvas');
+const ctx = canvas.getContext('2d');
+let embers = [];
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+function spawnEmber() {
+  embers.push({
+    x: Math.random() * canvas.width, y: canvas.height + 10,
+    size: 1.5 + Math.random() * 2.5, speedY: 0.6 + Math.random() * 1.4,
+    speedX: (Math.random() - 0.5) * 0.6, opacity: 0.4 + Math.random() * 0.55,
+    flicker: 0.008 + Math.random() * 0.012, hue: 10 + Math.random() * 35,
+  });
+}
+function drawEmbers() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = embers.length-1; i >= 0; i--) {
+    const e = embers[i];
+    e.y -= e.speedY; e.x += e.speedX + Math.sin(e.y * 0.03) * 0.35;
+    e.opacity -= e.flicker * 0.25; e.size -= 0.003;
+    if (e.opacity <= 0 || e.size <= 0.2 || e.y < -10) { embers.splice(i,1); continue; }
+    ctx.save();
+    ctx.globalAlpha = Math.min(e.opacity, 0.85);
+    const g = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.size * 2.2);
+    g.addColorStop(0, `hsla(${e.hue}, 100%, 92%, 1)`);
+    g.addColorStop(0.4, `hsla(${e.hue}, 100%, 60%, 0.8)`);
+    g.addColorStop(1, `hsla(${e.hue - 10}, 90%, 28%, 0)`);
+    ctx.fillStyle = g; ctx.beginPath();
+    ctx.arc(e.x, e.y, e.size * 2.2, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  if (Math.random() < 0.45 || embers.length < 70) spawnEmber();
+  requestAnimationFrame(drawEmbers);
+}
+for (let i = 0; i < 65; i++) { spawnEmber(); embers[i].y = Math.random() * canvas.height; }
+drawEmbers();
+</script>
+
+</div>
+</body>
+</html>
+
+    <script>
+        function playMusic() {
+  const music = document.getElementById('bgMusic');
+  if (music) {
+    music.volume = 0.4;
+    music.play().catch(e => console.log("Playback blocked until user interacts"));
+  }
+}
+
+function startGame() {
+  // REMOVED THE // SO IT ACTUALLY PLAYS!
+  playMusic(); 
+
+  initState();
+  ['titleScreen','winScreen','loseScreen'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById('gameScreen').style.display = 'flex';
+  renderAll();
+}
+
+function toggleMusic() {
+  const music = document.getElementById('bgMusic');
+  const btn = document.getElementById('musicToggle');
+  
+  if (!music) return; 
+
+  if (music.paused) {
+    music.volume = 0.4;
+    music.play().catch(e => console.log("Audio blocked by browser"));
+    btn.textContent = "🔊 MUSIC: ON";
+    btn.style.color = "var(--gold)";
+  } else {
+    music.pause();
+    btn.textContent = "🔈 MUSIC: OFF";
+    btn.style.color = "var(--text3)";
+  }
+}
+    </script>
+</body>
+</html>
